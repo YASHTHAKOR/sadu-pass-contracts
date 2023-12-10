@@ -27,15 +27,19 @@ contract SAFUPass {
 
     event AuthRegister(string companyId, address user);
 
+    constructor() {
+
+    }
+
     function addPassword(string memory domain, string memory data) external {
         Password memory newPassword = Password(domain, data);
         records[msg.sender].push(newPassword);
         emit passwordAdd(domain, data, msg.sender);
     }
 
-    function getPassword(address user, uint index) public view returns (Password memory) {
+    function getPassword(address user, uint index) public view returns (Password memory password) {
         require(index < records[user].length, "Index out of bounds");
-        return records[user][index];
+        password = records[user][index];
     }
 
     function registerForOauth(string memory publicKey,string memory companyId) external {
@@ -44,7 +48,7 @@ contract SAFUPass {
         emit AuthRegister(companyId, msg.sender);
     }
 
-    function authLogin( string memory data, address oAuth ) {
+    function authLogin( string memory data, address oAuth ) external {
         AuthLogins memory authLogin = AuthLogins(data);
         authLogins[msg.sender][oAuth] = authLogin;
     }
